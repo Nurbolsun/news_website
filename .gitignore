@@ -5,3 +5,4 @@ __pycache__
 *.pyc
 .pyre/
 media/
+photo_for_news
