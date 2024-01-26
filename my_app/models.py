@@ -49,6 +49,7 @@ class News(models.Model):
     photo = models.ImageField(upload_to="photo_for_news", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    count_views = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
