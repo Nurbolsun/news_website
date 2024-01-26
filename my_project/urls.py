@@ -16,9 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from my_app.views import NewsListAPIView
+from my_app.views import NewsRetrieveAPIView, CategoryRetrieveAPIView, TagRetrieveAPIView, AllCategoryAPIView, AllNewsAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', NewsListAPIView.as_view(), name='news-list')
+    path('news/<int:pk>', NewsRetrieveAPIView.as_view()),
+    path('news/', AllNewsAPIView.as_view(), name= 'all-news'),
+    path('category/', AllCategoryAPIView.as_view(), name= 'all-categories'),
+    path('category/<int:pk>', CategoryRetrieveAPIView.as_view()),
+    path('tag/<int:pk>', TagRetrieveAPIView.as_view()),
 ]

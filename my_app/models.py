@@ -15,7 +15,7 @@ class Tag(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
 
     def __str__(self):
@@ -56,5 +56,3 @@ class News(models.Model):
     class Meta:
         verbose_name = "Новости"
         verbose_name_plural = "Новости"
-
-
