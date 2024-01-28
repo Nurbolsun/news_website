@@ -26,7 +26,7 @@ from django.conf import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Episyche Technologies",
+        title="Post API",
         default_version='v1',),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -43,5 +43,8 @@ urlpatterns = [
     path('tag/<int:pk>', TagRetrieveAPIView.as_view()),
     path('news/<int:pk>', NewsDetailView.as_view(), name='news-detail'),
 
-    path('docs/', schema_view.with_ui('swagger', cache_timeout=0),name='schema-swagger-ui'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('post/', NewsRetrieveAPIView.as_view(), name='posts'),
+
+
 ]
