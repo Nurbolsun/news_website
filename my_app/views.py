@@ -56,19 +56,33 @@ class AllNewsAPIView(APIView):
 
 class MainAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        data = {}
 
         # Получаем данные из каждой модели
         category = Category.objects.all()
         news = News.objects.all()
+        last_news = News.objects.all()
+        if last_news.count() > 5:
+            last_news = last_news.order_by('-id')[:5]
+        else: last_news = News.objects.all()
 
         category_serializer = CategoryListSerializer(category, many=True)
         news_serializer = NewsListSerializers(news, many=True)
+        last_news_serializer = NewsListSerializers(last_news, many=True)
+        # Данные для категорий
+        data_category = {'Категории': {'category1': category_serializer.data}}
+        data_category['Категории'].update({'news': news_serializer.data})
 
-        data['category1'] = category_serializer.data
-        data['news1'] = news_serializer.data
+        # Данные для популярных новостей
+        data_popular_news = {'Популярные новости': {'category1': category_serializer.data}}
+        data_popular_news['Популярные новости'].update({'news': news_serializer.data})
 
-        return Response(data)
+        # Данные для Последние новости
+        data_latest_news = {'Последние новости': {'category1': category_serializer.data}}
+        data_latest_news['Последние новости'].update({'news': last_news_serializer.data})
+        # Общий результат
+        result = [data_category, data_popular_news, data_latest_news]
+
+        return Response(result)
 
 
 class NewsDetailView(APIView):
