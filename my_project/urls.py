@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from my_app.views import NewsRetrieveAPIView, CategoryRetrieveAPIView, TagRetrieveAPIView, AllCategoryAPIView,\
-    AllNewsAPIView, MainAPIView, NewsDetailView
+    AllNewsAPIView, MainAPIView, NewsDetailView, NewsCreateView, CategoryCreateView
 from rest_framework_swagger.views import get_swagger_view
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -40,11 +40,13 @@ urlpatterns = [
     path('news/', AllNewsAPIView.as_view(), name='all-news'),
     path('category/', AllCategoryAPIView.as_view(), name='all-categories'),
     path('category/<int:pk>', CategoryRetrieveAPIView.as_view()),
+    path('category/create/', CategoryCreateView.as_view()),
     path('tag/<int:pk>', TagRetrieveAPIView.as_view()),
     path('news/<int:pk>', NewsDetailView.as_view(), name='news-detail'),
 
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('post/', NewsRetrieveAPIView.as_view(), name='posts'),
+    path('news/create/', NewsCreateView.as_view(), name='Создать Новости'),
+
 
 
 ]
