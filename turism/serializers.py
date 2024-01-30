@@ -1,6 +1,11 @@
 from rest_framework import serializers
 
-from .models import HomePage, Region, Place, Category
+from .models import (
+    HomePage, Region,
+    Place, Category,
+    PlaceImage, Month,
+    Traveller
+)
 
 
 class HomePageSerializer(serializers.ModelSerializer):
@@ -20,7 +25,19 @@ class RegionNameSerializer(serializers.ModelSerializer):
             'name',
         )
 
+
 class RegionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = (
+            'id',
+            'name',
+            'image',
+            'short_description',
+        )
+
+
+class RegionDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
         fields = (
@@ -29,6 +46,32 @@ class RegionSerializer(serializers.ModelSerializer):
             'image',
             'description',
         )
+
+
+class MonthSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Month
+        fields = (
+            'id',
+            'name',
+            'image',
+        )
+
+
+class TravellerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Traveller
+        fields = (
+            'id',
+            'name',
+            'image',
+        )
+
+
+class PlaceImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlaceImage
+        fields = ('image',)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -40,20 +83,22 @@ class CategorySerializer(serializers.ModelSerializer):
             'image',
         )
 
+
 class PlaceIncompleteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = (
             'id',
-            'image',
             'name',
-            'description',
+            'image'
         )
 
 
 class PlaceSerializer(serializers.ModelSerializer):
-    region = RegionSerializer(read_only=True)
-    categories = CategorySerializer(many=True)
+    images = PlaceImageSerializer(many=True, read_only=True)
+    # months = MonthSerializer(many=True, read_only=True)
+    # region = RegionSerializer(read_only=True)
+    # categories = CategorySerializer(many=True)
     class Meta:
         model = Place
         fields = (
@@ -61,9 +106,9 @@ class PlaceSerializer(serializers.ModelSerializer):
             'name',
             'address',
             'phone_number',
-            'image',
+            'images',
             'description',
-            'month',
-            'categories',
-            'region'
+            # 'months',
+            # 'categories',
+            # 'region'
         )

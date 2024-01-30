@@ -1,6 +1,5 @@
 from django.db import models
 from solo.models import SingletonModel
-from multiselectfield import MultiSelectField
 
 
 class HomePage(SingletonModel):
@@ -28,6 +27,10 @@ class Region(models.Model):
     image = models.ImageField(
         upload_to='images/turism/',
         verbose_name='Фото'
+    )
+    short_description = models.CharField(
+        max_length=255,
+        verbose_name='Краткое описание'
     )
     description = models.TextField(
         verbose_name='Описание',
@@ -61,6 +64,42 @@ class Category(models.Model):
         ordering = ('name',)
 
 
+class Month(models.Model):
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=25, unique=True
+    )
+    image = models.ImageField(
+        verbose_name='Изображение',
+        upload_to='images/turism/'
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name='Месяц'
+        verbose_name_plural = 'Месяцы'
+
+
+class Traveller(models.Model):
+    name = models.CharField(
+        verbose_name='Название',
+        max_length=25, unique=True
+    )
+    image = models.ImageField(
+        verbose_name='Изображение',
+        upload_to='images/turism/'
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name='Путешествие'
+        verbose_name_plural = 'Путешествия'
+
+
 class Place(models.Model):
     name = models.CharField(
         max_length=150,
@@ -78,31 +117,20 @@ class Place(models.Model):
     )
     image = models.ImageField(
         upload_to='images/turism/',
+        blank=True, null=True, default='',
         verbose_name='Фото'
     )
     description = models.TextField(
         verbose_name='Описание',
         blank=True, null=True,
     )
-    MONTH_CHOICES = (
-        ('Январь', 'Январь'),
-        ('Февраль', 'Февраль'),
-        ('Март', 'Март'),
-        ('Апрель', 'Апрель'),
-        ('Май', 'Май'),
-        ('Июнь', 'Июнь'),
-        ('Июль', 'Июль'),
-        ('Август', 'Август'),
-        ('Сентябрь', 'Сентябрь'),
-        ('Октябрь', 'Октябрь'),
-        ('Ноябрь', 'Ноябрь'),
-        ('Декабрь', 'Декабрь')
+    months = models.ManyToManyField(
+        Month, related_name='places',
+        verbose_name='Месяц'
     )
-
-    month = MultiSelectField(
-        choices=MONTH_CHOICES, max_choices=12,
-        max_length=255, verbose_name='Месяц',
-        blank=True, null=True
+    traveller = models.ManyToManyField(
+        Traveller, related_name='places',
+        verbose_name='Путешествие'
     )
     categories = models.ManyToManyField(
         Category, related_name='places',
@@ -122,3 +150,21 @@ class Place(models.Model):
         verbose_name_plural = 'Места отдыха'
         ordering = ('name', 'region')
 
+
+class PlaceImage(models.Model):
+    place = models.ForeignKey(
+        Place, on_delete=models.CASCADE,
+        related_name='place_images', verbose_name='Место'
+    )
+    image = models.ImageField(
+        upload_to='images/turism/',
+        blank=True, null=True, default='',
+        verbose_name='Фото'
+    )
+    def __str__(self):
+        return f'Фото для {self.place.name}'
+
+
+    class Meta:
+        verbose_name = 'Изображение места'
+        verbose_name_plural = 'Изображения места'
