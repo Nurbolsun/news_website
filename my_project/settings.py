@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'my_app',
     'rest_framework',
     'rest_framework_swagger',
-    'drf_yasg'
+    'drf_yasg',
+    'user_app',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'my_project.urls'
+
+AUTH_USER_MODEL = 'user_app.User'
 
 TEMPLATES = [
     {
@@ -120,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Bishkek'
 
 USE_I18N = True
 

@@ -15,18 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from my_app.views import NewsRetrieveAPIView, CategoryRetrieveAPIView, TagRetrieveAPIView, AllCategoryAPIView,\
-    AllNewsAPIView, MainAPIView, NewsDetailView, NewsCreateView, CategoryCreateView
-from rest_framework_swagger.views import get_swagger_view
-from drf_yasg.views import get_schema_view
+from django.urls import path, include
 from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from django.conf import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Post API",
+        title="NEWS API",
         default_version='v1',),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -35,18 +31,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', MainAPIView.as_view()),
-    # path('news/<int:pk>', NewsRetrieveAPIView.as_view()),
-    path('news/', AllNewsAPIView.as_view(), name='all-news'),
-    path('category/', AllCategoryAPIView.as_view(), name='all-categories'),
-    path('category/<int:pk>', CategoryRetrieveAPIView.as_view()),
-    path('category/create/', CategoryCreateView.as_view()),
-    path('tag/<int:pk>', TagRetrieveAPIView.as_view()),
-    path('news/<int:pk>', NewsDetailView.as_view(), name='news-detail'),
-
+    path('', include('my_app.urls')),
+    path('user/', include('user_app.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('news/create/', NewsCreateView.as_view(), name='Создать Новости'),
-
-
-
 ]
