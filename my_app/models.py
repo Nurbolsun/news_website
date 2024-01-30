@@ -57,3 +57,17 @@ class News(models.Model):
     class Meta:
         verbose_name = "Новости"
         verbose_name_plural = "Новости"
+
+
+class Slider(models.Model):
+    name = models.CharField(max_length=255)
+    img = models.ImageField(upload_to="photo_for_slider", null=True, blank=True)
+    title = models.TextField()
+    subtitle = models.TextField()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Слайдер"
+        verbose_name_plural = "Слайдер"

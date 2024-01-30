@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import News, Category, Tag, Author
+from .models import News, Category, Tag, Author, Slider
 
 
 class NewsListSerializers(serializers.ModelSerializer):
@@ -19,3 +19,9 @@ class TagListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ['id', 'name']
+
+
+class SliderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Slider
+        fields = '__all__'
