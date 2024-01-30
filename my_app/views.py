@@ -7,8 +7,6 @@ from my_app.serializer import NewsListSerializers, CategoryListSerializer, TagLi
 from rest_framework.generics import RetrieveAPIView
 
 
-# Create your views here.
-
 # class NewsListAPIView(APIView):
 #     def get(self, request, *args, **kwargs):
 #         from my_app.models import Category
