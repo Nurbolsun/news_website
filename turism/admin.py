@@ -7,7 +7,7 @@ from turism.models import (
     HomePage, Region,
     Place, Category,
     PlaceImage, Month,
-    Traveller
+    Traveller, Video
 )
 
 
@@ -17,6 +17,15 @@ class HomePageAdmin(SingletonModelAdmin):
         'title',
         'id',
         'description',
+        )
+
+
+@admin.register(Video)
+class VideoAdmin(SingletonModelAdmin):
+    list_display = (
+        'title',
+        'id',
+        'video_url',
         )
 
 

@@ -3,16 +3,17 @@ from django.urls import path, include
 from .views import (
     HomePageView, RegionNameListView,
     RegionListView, RegionDetailView,
-    CategoryListView,
-    PlacesByCategoryView, PlacesByRegionView,
-    PlacesByMonthView, PLacesByTravellerView,
-    PlaceListView, PlaceDetailView,
-    MonthListView, TravellerListView,
+    CategoryListView, PlacesByCategoryView,
+    PlacesByRegionView, PlacesByMonthView,
+    PLacesByTravellerView, PlaceListView,
+    PlaceDetailView, MonthListView,
+    TravellerListView, VideoView,
 )
 
 
 urlpatterns = [
     path('homepage/', HomePageView.as_view(), name='homepage'),
+    path('video/', VideoView.as_view(), name='video'),
     path('regions_list/', RegionNameListView.as_view(), name='regions-list'),
     path('regions/', RegionListView.as_view(), name='regions'),
     path('regions/<int:pk>/', RegionDetailView.as_view(), name='regions-detail'),

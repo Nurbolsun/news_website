@@ -19,6 +19,24 @@ class HomePage(SingletonModel):
         verbose_name_plural = 'Главная страница'
 
 
+class Video(SingletonModel):
+    title = models.CharField(
+        max_length=100,
+        verbose_name='Заголовок'
+    )
+    video_url = models.FileField(
+        upload_to='videos/turism/',
+        verbose_name='Видео'
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Видео для заставки'
+        verbose_name_plural = 'Видео для заставки'
+
+
 class Region(models.Model):
     name = models.CharField(
         max_length=100,

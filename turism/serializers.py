@@ -4,7 +4,7 @@ from .models import (
     HomePage, Region,
     Place, Category,
     PlaceImage, Month,
-    Traveller
+    Traveller, Video,
 )
 
 
@@ -14,6 +14,16 @@ class HomePageSerializer(serializers.ModelSerializer):
         fields = (
             'title',
             'description',
+        )
+
+
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = (
+            'id',
+            'title',
+            'video_url'
         )
 
 
