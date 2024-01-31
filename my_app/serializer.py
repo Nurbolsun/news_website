@@ -3,10 +3,12 @@ from .models import News, Category, Tag, Slider
 
 
 class NewsListSerializers(serializers.ModelSerializer):
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+
     class Meta:
         model = News
         fields = ['id', 'category', 'title', 'description', 'photo',
-                  'created_at', 'updated_at', 'tag', 'count_views', 'count_likes']
+                  'created_at', 'updated_at', 'tag', 'count_views', 'count_likes', 'user']
 
 
 class CategoryListSerializer(serializers.ModelSerializer):

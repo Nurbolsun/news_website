@@ -26,9 +26,8 @@ class Category(models.Model):
 
 
 class News(models.Model):
-
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
-    tag = models.ManyToManyField(Tag, blank=True, null=True)
+    tag = models.ManyToManyField(Tag)
     title = models.CharField(verbose_name="Название", max_length=150)
     description = models.TextField("Описание")
     photo = models.ImageField(upload_to="images/news", null=True, blank=True)
@@ -37,6 +36,7 @@ class News(models.Model):
     count_views = models.IntegerField(default=0)
     count_likes = models.IntegerField(default=0)
     is_active = models.BooleanField(verbose_name="Активный", default=True)
+    user = models.ForeignKey(User, verbose_name="Ползователь", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
