@@ -108,7 +108,8 @@ class Traveller(models.Model):
     )
     image = models.ImageField(
         verbose_name='Изображение',
-        upload_to='images/turism/'
+        upload_to='images/turism/',
+        blank=True, null=True
     )
 
     def __str__(self):
@@ -145,11 +146,13 @@ class Place(models.Model):
     )
     months = models.ManyToManyField(
         Month, related_name='places',
-        verbose_name='Месяц'
+        verbose_name='Месяц',
+        blank=True, null=True
     )
     traveller = models.ManyToManyField(
         Traveller, related_name='places',
-        verbose_name='Путешествие'
+        verbose_name='Путешествие',
+        blank=True, null=True
     )
     categories = models.ManyToManyField(
         Category, related_name='places',
