@@ -28,7 +28,6 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    last_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField("Электронная почта", unique=True)
     # password = models.CharField(max_length=128)
     is_verified = models.BooleanField("Верифицирован", default=False)
@@ -36,6 +35,7 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
     objects = UserManager()
+    
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"

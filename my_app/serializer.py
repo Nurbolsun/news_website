@@ -6,7 +6,7 @@ class NewsListSerializers(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ['id', 'category', 'title', 'description', 'photo',
-                  'created_at', 'updated_at', 'tag', 'count_views']
+                  'created_at', 'updated_at', 'tag', 'count_views', 'count_likes']
 
 
 class CategoryListSerializer(serializers.ModelSerializer):

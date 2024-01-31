@@ -3,7 +3,7 @@ from my_app.views import CategoryRetrieveAPIView, TagRetrieveAPIView, AllCategor
     AllNewsAPIView, MainAPIView, NewsDetailView, NewsCreateView, CategoryCreateView
 
 urlpatterns = [
-    path('', MainAPIView.as_view()),
+    path('slider/', MainAPIView.as_view()),
     path('news/', AllNewsAPIView.as_view(), name='all-news'),
     path('category/', AllCategoryAPIView.as_view(), name='all-categories'),
     path('category/<int:pk>', CategoryRetrieveAPIView.as_view()),

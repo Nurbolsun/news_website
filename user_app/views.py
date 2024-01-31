@@ -22,7 +22,13 @@ class LoginView(FormView):
         if user is not None:
             if user.is_active:
                 login(self.request, user)
-                return redirect("all")
+                return redirect("../../admin/")
             else:
                 HttpResponse("Ваш аккаунт не актвен")
         HttpResponse("Такого пользвателя не существует")
+
+
+def user_logout(request):
+    if request.user.is_authenticated:
+        logout(request)
+    return redirect("all")
