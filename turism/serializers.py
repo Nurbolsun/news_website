@@ -104,11 +104,22 @@ class PlaceIncompleteSerializer(serializers.ModelSerializer):
         )
 
 
+class PlaceIncompleteWithRegionSerializer(serializers.ModelSerializer):
+    region = RegionNameSerializer(read_only=True)
+
+    class Meta:
+        model = Place
+        fields = (
+            'id',
+            'name',
+            'image',
+            'region',
+        )
+
+
 class PlaceSerializer(serializers.ModelSerializer):
     images = PlaceImageSerializer(many=True, read_only=True)
-    # months = MonthSerializer(many=True, read_only=True)
-    # region = RegionSerializer(read_only=True)
-    # categories = CategorySerializer(many=True)
+
     class Meta:
         model = Place
         fields = (
@@ -118,7 +129,4 @@ class PlaceSerializer(serializers.ModelSerializer):
             'phone_number',
             'images',
             'description',
-            # 'months',
-            # 'categories',
-            # 'region'
         )

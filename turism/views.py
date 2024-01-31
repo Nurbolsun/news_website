@@ -15,7 +15,7 @@ from .serializers import (
     RegionDetailSerializer, CategorySerializer,
     PlaceSerializer, PlaceIncompleteSerializer,
     MonthSerializer, TravellerSerializer,
-    VideoSerializer,
+    VideoSerializer, PlaceIncompleteWithRegionSerializer
 )
 
 
@@ -47,7 +47,7 @@ class PlacesByCategoryView(APIView):
     def get(self, request, category_id):
         try:
             places = Place.objects.filter(categories__id=category_id)
-            serializer = PlaceIncompleteSerializer(places, many=True)
+            serializer = PlaceIncompleteWithRegionSerializer(places, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -85,7 +85,7 @@ class PLacesByTravellerView(APIView):
         try:
             traveller = Traveller.objects.get(id=traveller_id)
             places = traveller.places.all()
-            serializer = PlaceIncompleteSerializer(places, many=True)
+            serializer = PlaceIncompleteWithRegionSerializer(places, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Traveller.DoesNotExist:
             return Response({'error': 'Путешествие не найдено'}, status=status.HTTP_404_NOT_FOUND)
@@ -98,7 +98,7 @@ class PlacesByMonthView(APIView):
         try:
             month = Month.objects.get(id=month_id)
             places = month.places.all()
-            serializer = PlaceIncompleteSerializer(places, many=True)
+            serializer = PlaceIncompleteWithRegionSerializer(places, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Month.DoesNotExist:
             return Response({'error': 'Месяц не найден'}, status=status.HTTP_404_NOT_FOUND)
@@ -118,7 +118,7 @@ class TravellerListView(generics.ListAPIView):
 
 class PlaceListView(generics.ListAPIView):
     queryset = Place.objects.all()
-    serializer_class = PlaceSerializer
+    serializer_class = PlaceIncompleteWithRegionSerializer
 
 
 class PlaceDetailView(generics.RetrieveAPIView):
