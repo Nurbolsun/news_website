@@ -89,7 +89,8 @@ class Month(models.Model):
     )
     image = models.ImageField(
         verbose_name='Изображение',
-        upload_to='images/turism/'
+        upload_to='images/turism/',
+        blank=True, null=True
     )
 
     def __str__(self):
