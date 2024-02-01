@@ -1,11 +1,11 @@
 """
-URL configuration for my_project project.
+URL configuration for config project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
 Examples:
 Function views
-    1. Add an import:  from my_app import views
+    1. Add an import:  from news import views
     2. Add a URL to urlpatterns:  path('', views.home, name='home')
 Class-based views
     1. Add an import:  from other_app.views import Home
@@ -19,23 +19,29 @@ from django.urls import path, include, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from user_app import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
 schema_view = get_schema_view(
     openapi.Info(
-        title="NEWS API",
+        title="Post API",
         default_version='v1',),
     public=True,
-    permission_classes=(permissions.AllowAny,),
+    permission_classes=(permissions.AllowAny, ),
 )
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('my_app.urls')),
-    path('user/', include('user_app.urls')),
+    path('', include('news.urls')),
+    path('drf-auth/', include('rest_framework.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 
-    path("drf-auth/", include('rest_framework.urls'), name="login"),
-    path('auth', include('djoser.urls')),
-    path(r'^auth', include('djoser.urls.authtoken')),
+    path('auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
+
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
+
 ]

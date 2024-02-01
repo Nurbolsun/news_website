@@ -57,9 +57,9 @@ class Migration(migrations.Migration):
                 ('photo', models.ImageField(blank=True, null=True, upload_to='photo_for_news')),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('author', models.ManyToManyField(blank=True, to='my_app.author')),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='my_app.category')),
-                ('tag', models.ManyToManyField(blank=True, null=True, to='my_app.tag')),
+                ('author', models.ManyToManyField(blank=True, to='news.author')),
+                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='news.category')),
+                ('tag', models.ManyToManyField(blank=True, null=True, to='news.tag')),
             ],
             options={
                 'verbose_name': 'Новости',
