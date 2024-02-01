@@ -6,9 +6,8 @@ class NewsListSerializers(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
-        model = News
-        fields = ['id', 'category', 'title', 'description', 'photo',
-                  'created_at', 'updated_at', 'tag', 'count_views', 'count_likes', 'user']
+        model = Slider
+        fields = '__all__'
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
