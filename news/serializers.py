@@ -6,7 +6,7 @@ class NewsListSerializers(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
-        model = Slider
+        model = News
         fields = '__all__'
 
 
