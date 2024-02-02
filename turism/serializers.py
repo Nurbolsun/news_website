@@ -81,7 +81,10 @@ class TravellerSerializer(serializers.ModelSerializer):
 class PlaceImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlaceImage
-        fields = ('image',)
+        fields = (
+            'id',
+            'image',
+        )
 
 
 class CategorySerializer(serializers.ModelSerializer):

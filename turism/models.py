@@ -146,13 +146,11 @@ class Place(models.Model):
     )
     months = models.ManyToManyField(
         Month, related_name='places',
-        verbose_name='Месяц',
-        blank=True, null=True
+        verbose_name='Месяц', blank=True
     )
     traveller = models.ManyToManyField(
         Traveller, related_name='places',
-        verbose_name='Путешествие',
-        blank=True, null=True
+        verbose_name='Путешествие', blank=True
     )
     categories = models.ManyToManyField(
         Category, related_name='places',
