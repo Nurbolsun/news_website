@@ -121,7 +121,7 @@ class PlaceIncompleteWithRegionSerializer(serializers.ModelSerializer):
 
 
 class PlaceSerializer(serializers.ModelSerializer):
-    images = PlaceImageSerializer(many=True, read_only=True)
+    place_images = PlaceImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Place
@@ -130,6 +130,6 @@ class PlaceSerializer(serializers.ModelSerializer):
             'name',
             'address',
             'phone_number',
-            'images',
+            'place_images',
             'description',
         )
