@@ -1,4 +1,6 @@
 from rest_framework import permissions
+from django.db.models import Q
+from django.contrib.auth.models import Permission
 
 
 class IsAdminOrReadOnly(permissions.BasePermission): # Только админ могут изменение....
@@ -13,3 +15,5 @@ class IsOwnerOrReadOnly(permissions.BasePermission): # Только автор �
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.user == request.user
+
+

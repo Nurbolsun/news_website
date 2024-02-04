@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+from account.models import CustomUser
+
+
 # Create your models here.
 
 
@@ -26,7 +28,7 @@ class Category(models.Model):
 
 
 class News(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     tag = models.ManyToManyField(Tag)
     title = models.CharField(verbose_name="Название", max_length=150)
     description = models.TextField("Описание")
@@ -36,7 +38,7 @@ class News(models.Model):
     count_views = models.IntegerField(default=0)
     count_likes = models.IntegerField(default=0)
     is_active = models.BooleanField(verbose_name="Активный", default=True)
-    user = models.ForeignKey(User, verbose_name="Ползователь", on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, verbose_name="Пользователь", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
