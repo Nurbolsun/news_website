@@ -60,13 +60,13 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    def set_password(self, raw_password):
-        self.password = make_password(raw_password)
-
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            self.password = make_password(self.password)
-        super().save(*args, **kwargs)
+    # def set_password(self, raw_password):
+    #     self.password = make_password(raw_password)
+    #
+    # def save(self, *args, **kwargs):
+    #     if not self.pk:
+    #         self.password = make_password(self.password)
+    #     super().save(*args, **kwargs)
 
     def __str__(self):
         return self.email
