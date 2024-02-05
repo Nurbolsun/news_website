@@ -1,4 +1,4 @@
-from rest_framework import status, generics
+from rest_framework import status, generics, viewsets
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -26,26 +26,14 @@ class NewsAPIDestroy(generics.RetrieveDestroyAPIView):
     serializer_class = NewsListSerializers
 
 
-class CategoryRetrieveAPIView(RetrieveAPIView):
+class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategoryListSerializer
 
 
-class CategoryCreateView(generics.CreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategoryListSerializer
-
-
-class TagRetrieveAPIView(RetrieveAPIView):
+class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagListSerializer
-
-
-class AllCategoryAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
-        serializer = CategoryListSerializer(categories, many=True)
-        return Response(serializer.data)
 
 
 class AllNewsAPIView(APIView):
