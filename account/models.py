@@ -22,7 +22,6 @@ class UserManager(BaseUserManager):
             raise TypeError('Пароль не должен быть пустым')
         user = self.create_user(username, email, password)
         user.is_superuser = True
-        user.is_staff = True
         user.save()
         return user
 
@@ -54,7 +53,6 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=255, unique=True, null=True, blank=True, db_index=True, verbose_name='Имя пользователя')
     email = models.EmailField(max_length=255, unique=True, db_index=True, verbose_name='Электронная почта')
     role = models.CharField(max_length=255, choices=ROLES, default=GUEST, verbose_name='Роль')
-    is_staff = models.BooleanField(default=False, verbose_name='Активный')
     first_name = models.CharField(max_length=255, null=True, blank=True, verbose_name='Имя')
     last_name = models.CharField(max_length=255, null=True, blank=True, verbose_name='Фамилия')
     gender = models.CharField(max_length=20, choices=GENDER, null=True, blank=True, verbose_name='Пол')
