@@ -4,11 +4,11 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password, username, **extra_fields):
+    def create_user(self, username=None, email=None, password=None, **extra_fields):
         if not email:
             raise ValueError("Электронная почта должна быть обязательным")
         email = self.normalize_email(email)
-        user = self.model(email=email, username=username, **extra_fields)
+        user = self.model(username=username, email=email, **extra_fields)
         user.set_password(password)
         user.save()
         return user
@@ -16,8 +16,9 @@ class UserManager(BaseUserManager):
     def create_superuser(self, username, email, password=None, **extra_fields):
         if password is None:
             raise TypeError('Пароль не должен быть пустым')
-        user = self.create_user(username, email, password)
+        user = self.create_user(username=username, email=email, password=password)
         user.is_superuser = True
+        user.is_staff = True
         user.save()
         return user
 
@@ -50,8 +51,8 @@ class CustomUser(AbstractUser):
     birthdate = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
 
     objects = UserManager()
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    # USERNAME_FIELD = 'username'
+    # REQUIRED_FIELDS = ['email']
 
     # def set_password(self, raw_password):
     #     self.password = make_password(raw_password)
