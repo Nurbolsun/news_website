@@ -4,7 +4,7 @@ from .models import (
     HomePage, Region,
     Place, Category,
     PlaceImage, Month,
-    Traveller, Video,
+    Traveller, Video, Commentary,
 )
 
 
@@ -132,4 +132,16 @@ class PlaceSerializer(serializers.ModelSerializer):
             'phone_number',
             'place_images',
             'description',
+        )
+
+
+class CommentarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Commentary
+        fields = (
+            'id',
+            'image',
+            'title',
+            'description',
+            'link',
         )

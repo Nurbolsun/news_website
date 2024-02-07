@@ -7,7 +7,7 @@ from turism.models import (
     HomePage, Region,
     Place, Category,
     PlaceImage, Month,
-    Traveller, Video
+    Traveller, Video, Commentary,
 )
 
 
@@ -140,3 +140,20 @@ class PlaceAdmin(ModelAdmin):
     def months(self, obj):
         return ", ".join([month.name for month in obj.months.all()])
     months.short_description = 'Месяц'
+
+
+@admin.register(Commentary)
+class CommentaryAdmin(ModelAdmin):
+    list_display = (
+        'id',
+        'title',
+        'image',
+        'description',
+        'link',
+    )
+
+    def image(self, obj):
+        if obj.image:
+            return mark_safe("<img src='{}' width='60' />".format(obj.image.url))
+        return 'None'
+    image.__name__ = 'Фотография'

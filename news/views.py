@@ -1,10 +1,9 @@
 from rest_framework import status, generics, viewsets
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from news.serializers import NewsListSerializers, CategoryListSerializer, TagListSerializer, SliderSerializer
 from .models import News, Category, Tag, Slider
-from rest_framework.permissions import IsAuthenticated, AllowAny
 
 
 # Create your views here.

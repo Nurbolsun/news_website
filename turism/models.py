@@ -181,10 +181,37 @@ class PlaceImage(models.Model):
         blank=True, null=True, default='',
         verbose_name='Фото'
     )
+
     def __str__(self):
         return f'Фото для {self.place.name}'
-
 
     class Meta:
         verbose_name = 'Изображение места'
         verbose_name_plural = 'Изображения места'
+
+
+class Commentary(models.Model):
+    image = models.ImageField(
+        upload_to='images/turism/',
+        blank=True, null=True, default='',
+        verbose_name='Фото'
+    )
+    title = models.CharField(
+        max_length=150,
+        verbose_name='Название'
+    )
+    description = models.TextField(
+        verbose_name='Описание',
+        blank=True, null=True,
+    )
+    link = models.CharField(
+        max_length=150,
+        verbose_name='Cсылка'
+    )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
