@@ -1,8 +1,5 @@
 from django.db import models
-from account.models import CustomUser
-
-
-# Create your models here.
+from account.models import User
 
 
 class Tag(models.Model):
@@ -38,7 +35,7 @@ class News(models.Model):
     count_views = models.IntegerField(default=0)
     count_likes = models.IntegerField(default=0)
     is_active = models.BooleanField(verbose_name="Активный", default=True)
-    user = models.ForeignKey(CustomUser, verbose_name="Пользователь", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title
