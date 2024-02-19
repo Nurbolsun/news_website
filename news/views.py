@@ -6,8 +6,6 @@ from news.serializers import NewsListSerializers, CategoryListSerializer, TagLis
 from .models import News, Category, Tag, Slider
 
 
-# Create your views here.
-
 class NewsAPIList(generics.ListCreateAPIView):
     queryset = News.objects.all()
     serializer_class = NewsListSerializers

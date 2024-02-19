@@ -1,61 +1,105 @@
-from rest_framework import serializers, validators
-from account.models import CustomUser
+from rest_framework import serializers
+
+from .models import User
 
 
-class UserSerializers(serializers.ModelSerializer):
-    password2 = serializers.CharField(write_only=True)
+class RegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    password_confirmation = serializers.CharField(write_only=True)
 
     class Meta:
-        model = CustomUser
-        fields = ('username', 'email', 'password', 'password2')
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'password',
+            'password_confirmation',
+        )
 
-    def validate(self, data):
-        password = data.get('password')
-        password2 = data.get('password2')
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password_confirmation = attrs.pop('password_confirmation', None)
 
-        if password and password2 and password != password2:
-            raise serializers.ValidationError("Пароли не совпадают.")
-        return data
+        if password != password_confirmation:
+            raise serializers.ValidationError("Пароли не совпадают")
+        return attrs
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError(
+                "Пользователь с таким email уже существует.")
+        return value
+
 
     def create(self, validated_data):
         password = validated_data.pop('password')
-        password2 = validated_data.pop('password2')
-        if password and password2 and password == password2:
-            user = CustomUser.objects.create_user(**validated_data, password=password)
-            return user
-        raise serializers.ValidationError("Пароли не совпадают.")
-
-
-class RegisterSerializer(serializers.ModelSerializer):
-    class Neta:
-        model = CustomUser
-        fields = ('username', 'password1', 'password2' 'email', 'first_name', 'last_name')
-
-        extra_kwargs = {
-            "password": {"write_only": True},
-            'email': {
-                "required": True,
-                "allow_blank": False,
-                "validators": [validators.UniqueValidator(
-                    CustomUser.objects.all(), "Такими почтами существует"
-                )]
-            }
-        }
-
-    def create(self, validated_data):
-        username = validated_data.get('username')
-        password1 = validated_data.get('password1')
-        password2 = validated_data.get('password2')
-        email = validated_data.get('email')
-        first_name = validated_data.get('first_name')
-        last_name = validated_data.get('last_name')
-
-        user = CustomUser.objects.create_user(
-            username=username,
-            password1=password1,
-            password2=password2,
-            email=email,
-            first_name=first_name,
-            last_name=last_name
-        )
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email:
+            raise serializers.ValidationError('Укажите электронную почту для входа.')
+
+        if not password:
+            raise serializers.ValidationError('Укажите пароль.')
+
+        user = User.objects.filter(email=email).first()
+
+        if not user:
+            raise serializers.ValidationError("Пользователь с такой электронной почтой не зарегистрирован")
+
+        if not user.check_password(password):
+            raise serializers.ValidationError("Неверный пароль")
+
+        return data
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'phone_number',
+            'avatar',
+            'gender',
+            'age',
+        )
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class OTPVerificationSerializer(serializers.Serializer):
+    otp_reset = serializers.CharField()
+
+
+class CreateNewPasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(write_only=True)
+    password_confirmation = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password_confirmation = attrs.pop('password_confirmation', None)
+
+        if password != password_confirmation:
+            raise serializers.ValidationError("Пароли не совпадают")
+        return attrs

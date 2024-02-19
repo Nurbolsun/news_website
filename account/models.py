@@ -1,69 +1,99 @@
-from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser
+from datetime import timedelta
+from django.utils import timezone
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 
 
-class UserManager(BaseUserManager):
-    def create_user(self, username=None, email=None, password=None, **extra_fields):
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password, **extra_fields):
         if not email:
-            raise ValueError("Электронная почта должна быть обязательным")
+            raise ValueError(_("The Email must be set"))
         email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, username, email, password=None, **extra_fields):
-        if password is None:
-            raise TypeError('Пароль не должен быть пустым')
-        user = self.create_user(username=username, email=email, password=password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save()
-        return user
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_active", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError(_("Superuser must have is_staff=True."))
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError(_("Superuser must have is_superuser=True."))
+        return self.create_user(email, password, **extra_fields)
 
 
-class CustomUser(AbstractUser):
-    ADMIN = 'ADMIN'
-    SUPER_ADMIN = 'SUPER_ADMIN'
-    EDITOR = 'EDITOR'
-    JOURNALIST = 'JOURNALIST'
-    GUEST = 'GUEST'
-    ROLES = (
-            (ADMIN, 'ADMIN'),
-            (SUPER_ADMIN, 'SUPER_ADMIN'),
-            (EDITOR, 'EDITOR'),
-            (JOURNALIST, 'JOURNALIST'),
-            (GUEST, 'GUEST'),
+class User(AbstractUser):
+    username = models.CharField(
+        max_length=25, unique=False,
+        blank=True, null=True,
+        verbose_name='Имя пользователя',
     )
-    MALE = 'МУЖСКОЙ'
-    FEMALE = "ЖЕНСКИЙ"
+    email = models.EmailField(
+        verbose_name='Почта',
+        max_length=60, unique=True,
+        default='Еще не заполнен'
+    )
+    avatar = models.ImageField(
+        upload_to='avatars/',
+        null=True, blank=True,
+        verbose_name='Фото пользователя'
+    )
+    phone_number = models.CharField(
+        max_length=16, verbose_name='Номер телефона',
+        unique=True, blank=True, null=True
+    )
+    ROLE = (
+            ('ADMIN', 'Админ'),
+            ('JOURNALIST', 'Журналист'),
+    )
     GENDER = (
-        (MALE, 'МУЖСКОЙ'),
-        (FEMALE, "ЖЕНСКИЙ"),
+        ('MALE', 'Мужской'),
+        ('FEMALE', 'Женский'),
+        ('OTHER', 'Другое')
     )
-    username = models.CharField(max_length=255, unique=True, null=True, blank=True, verbose_name='Имя пользователя')
-    email = models.EmailField(max_length=255, unique=True, verbose_name='Электронная почта')
-    role = models.CharField(max_length=255, choices=ROLES, default=GUEST, verbose_name='Роль')
-    first_name = models.CharField(max_length=255, null=True, blank=True, verbose_name='Имя')
-    last_name = models.CharField(max_length=255, null=True, blank=True, verbose_name='Фамилия')
-    gender = models.CharField(max_length=20, choices=GENDER, null=True, blank=True, verbose_name='Пол')
-    birthdate = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
+    role = models.CharField(
+        max_length=200, choices=ROLE,
+        verbose_name='Роль',
+        blank=True, null=True
+    )
+    gender = models.CharField(
+        max_length=20, choices=GENDER,
+        null=True, blank=True,
+        verbose_name='Пол'
+    )
+    age = models.IntegerField(
+        verbose_name='Возраст',
+        blank=True, null=True
+    )
+    otp_reset = models.CharField(max_length=6, blank=True, null=True)
+    otp_reset_created_at = models.DateTimeField(blank=True, null=True)
 
-    objects = UserManager()
-    # USERNAME_FIELD = 'username'
-    # REQUIRED_FIELDS = ['email']
+    def otp_expired(self):
+        if self.otp_reset_created_at:
+            expiration_time = self.otp_reset_created_at + timedelta(minutes=5)
+            return timezone.now() > expiration_time
+        return True
 
-    # def set_password(self, raw_password):
-    #     self.password = make_password(raw_password)
-    #
-    # def save(self, *args, **kwargs):
-    #     if not self.pk:
-    #         self.password = make_password(self.password)
-    #     super().save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if self.otp_reset and not self.otp_reset_created_at:
+            self.otp_reset_created_at = timezone.now()
+        elif self.otp_reset and self.otp_reset_created_at:
+            self.otp_reset_created_at = timezone.now()
+
+        super().save(*args, **kwargs)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.email
+        return f'email:{self.email}, имя пользователя: {self.username}'
 
     class Meta:
         verbose_name = "Пользователь"
