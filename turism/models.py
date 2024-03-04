@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from solo.models import SingletonModel
 
 
@@ -71,6 +72,10 @@ class Category(models.Model):
     name = models.CharField(
         max_length=100,
         verbose_name='Название'
+    )
+    text = models.TextField(
+        verbose_name='Текст',
+        blank=True, null=True
     )
 
     def __str__(self):
@@ -190,10 +195,32 @@ class PlaceImage(models.Model):
         verbose_name_plural = 'Изображения места'
 
 
+class Feedback(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        verbose_name='Пользователь'
+    )
+    comment = models.TextField(
+        verbose_name='Комментарий'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"{self.user} - {self.created_at}"
+
+    class Meta:
+        verbose_name='Обратная связь'
+        verbose_name_plural='Обратная связь'
+
+
 class Commentary(models.Model):
     image = models.ImageField(
         upload_to='images/turism/',
-        blank=True, null=True, default='',
+        blank=True, null=True,
         verbose_name='Фото'
     )
     title = models.CharField(

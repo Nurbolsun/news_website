@@ -7,7 +7,8 @@ from .models import (
     HomePage, Region,
     Place, Category,
     Month, Traveller,
-    Video, Commentary
+    Video, Commentary,
+    Feedback
 )
 from .serializers import (
     HomePageSerializer, RegionSerializer,
@@ -15,7 +16,8 @@ from .serializers import (
     RegionDetailSerializer, CategorySerializer,
     PlaceSerializer, PlaceIncompleteSerializer,
     MonthSerializer, TravellerSerializer,
-    VideoSerializer, PlaceIncompleteWithRegionSerializer, CommentarySerializer
+    VideoSerializer, PlaceIncompleteWithRegionSerializer,
+    CommentarySerializer, FeedbackSerializer
 )
 
 
@@ -129,3 +131,11 @@ class PlaceDetailView(generics.RetrieveAPIView):
 class CommentaryListView(generics.ListAPIView):
     queryset = Commentary.objects.all()
     serializer_class = CommentarySerializer
+
+
+class FeedbackListCreateView(generics.ListCreateAPIView):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

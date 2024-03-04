@@ -7,7 +7,8 @@ from turism.models import (
     HomePage, Region,
     Place, Category,
     PlaceImage, Month,
-    Traveller, Video, Commentary,
+    Traveller, Video,
+    Commentary, Feedback
 )
 
 
@@ -51,6 +52,7 @@ class CategoryAdmin(ModelAdmin):
     list_display = (
         'id',
         'name',
+        'text',
         'image_show',
     )
 
@@ -157,3 +159,18 @@ class CommentaryAdmin(ModelAdmin):
             return mark_safe("<img src='{}' width='60' />".format(obj.image.url))
         return 'None'
     image.__name__ = 'Фотография'
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(ModelAdmin):
+    list_display = (
+        'id',
+        'get_user_name',
+        'comment',
+        'created_at'
+    )
+
+    def get_user_name(self, obj):
+        return obj.user.username if obj.user else "Anonymous"
+
+    get_user_name.short_description = 'User'

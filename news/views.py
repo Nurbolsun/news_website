@@ -2,8 +2,8 @@ from rest_framework import status, generics, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from news.serializers import NewsListSerializers, CategoryListSerializer, TagListSerializer, SliderSerializer
-from .models import News, Category, Tag, Slider
+from news.serializers import NewsListSerializers, NewsCategoryListSerializer, TagListSerializer, SliderSerializer
+from .models import News, NewsCategory, Tag, Slider
 
 
 class NewsAPIList(generics.ListCreateAPIView):
@@ -23,9 +23,9 @@ class NewsAPIDestroy(generics.RetrieveDestroyAPIView):
     serializer_class = NewsListSerializers
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategoryListSerializer
+class NewsCategoryViewSet(viewsets.ModelViewSet):
+    queryset = NewsCategory.objects.all()
+    serializer_class = NewsCategoryListSerializer
 
 
 class TagViewSet(viewsets.ModelViewSet):

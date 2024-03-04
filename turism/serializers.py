@@ -4,7 +4,8 @@ from .models import (
     HomePage, Region,
     Place, Category,
     PlaceImage, Month,
-    Traveller, Video, Commentary,
+    Traveller, Video,
+    Commentary, Feedback
 )
 
 
@@ -94,6 +95,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'id',
             'name',
             'image',
+            'text'
         )
 
 
@@ -145,3 +147,20 @@ class CommentarySerializer(serializers.ModelSerializer):
             'description',
             'link',
         )
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    user_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Feedback
+        fields = (
+            'id',
+            'user_name',
+            'comment',
+            'created_at'
+        )
+
+    def get_user_name(self, obj):
+        return obj.user.username if obj.user else "Anonymous"
+

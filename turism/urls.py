@@ -7,7 +7,8 @@ from .views import (
     PlacesByRegionView, PlacesByMonthView,
     PLacesByTravellerView, PlaceListView,
     PlaceDetailView, MonthListView,
-    TravellerListView, VideoView, CommentaryListView,
+    TravellerListView, VideoView,
+    CommentaryListView, FeedbackListCreateView
 )
 
 
@@ -27,4 +28,5 @@ urlpatterns = [
     path('months/', MonthListView.as_view(), name='months-list'),
     path('travellers/', TravellerListView.as_view(), name='travellers-list'),
     path('commentary/', CommentaryListView.as_view(), name='commentary-list'),
+    path('feedback/', FeedbackListCreateView.as_view(), name='feedback-list-create'),
 ]

@@ -43,7 +43,7 @@ class RegistrationView(APIView):
             )
             return Response({
                 'status': 200,
-                'message': 'Регистрация успешна. Проверьте электронную почту для подтверждения.',
+                'message': f'Регистрация успешна, {user.username}. Проверьте электронную почту для подтверждения.',
             })
         except ValidationError as e:
             return Response({

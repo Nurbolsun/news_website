@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import News, Category, Tag, Slider
+from .models import News, NewsCategory, Tag, Slider
 
 
 class NewsListSerializers(serializers.ModelSerializer):
@@ -10,9 +10,9 @@ class NewsListSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CategoryListSerializer(serializers.ModelSerializer):
+class NewsCategoryListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = NewsCategory
         fields = ['id', 'name']
 
 

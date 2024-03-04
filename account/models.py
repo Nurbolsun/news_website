@@ -30,7 +30,6 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     username = models.CharField(
         max_length=25, unique=False,
-        blank=True, null=True,
         verbose_name='Имя пользователя',
     )
     email = models.EmailField(
