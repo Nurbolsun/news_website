@@ -108,14 +108,6 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
             'img',
             'caption',
             'page',
-            'title_2',
-            'page_2',
-            'title_3',
-            'page_3',
-            'title_4',
-            'page_4',
-            'title_5',
-            'page_5',
         )
 
 

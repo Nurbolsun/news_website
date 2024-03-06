@@ -85,38 +85,6 @@ class Category(models.Model):
         verbose_name='Страница',
         blank=True, null=True
     )
-    title_2 = models.CharField(
-        max_length=100,
-        verbose_name='Заголовок 2'
-    )
-    page_2 = models.TextField(
-        verbose_name='Страница 2',
-        blank=True, null=True
-    )
-    title_3 = models.CharField(
-        max_length=100,
-        verbose_name='Заголовок 3'
-    )
-    page_3 = models.TextField(
-        verbose_name='Страница 3',
-        blank=True, null=True
-    )
-    title_4 = models.CharField(
-        max_length=100,
-        verbose_name='Заголовок 4'
-    )
-    page_4 = models.TextField(
-        verbose_name='Страница 4',
-        blank=True, null=True
-    )
-    title_5 = models.CharField(
-        max_length=100,
-        verbose_name='Заголовок 5'
-    )
-    page_5 = models.TextField(
-        verbose_name='Страница 5',
-        blank=True, null=True
-    )
 
     def __str__(self):
         return self.title
