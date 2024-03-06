@@ -13,11 +13,12 @@ from .models import (
 from .serializers import (
     HomePageSerializer, RegionSerializer,
     RegionNameSerializer, RegionSerializer,
-    RegionDetailSerializer, CategorySerializer,
+    RegionDetailSerializer,
+    CategoryDetailSerializer, CategorySerializer,
     PlaceSerializer, PlaceIncompleteSerializer,
     MonthSerializer, TravellerSerializer,
     VideoSerializer, PlaceIncompleteWithRegionSerializer,
-    CommentarySerializer, FeedbackSerializer
+    CommentarySerializer, FeedbackSerializer,
 )
 
 
@@ -43,6 +44,11 @@ class VideoView(APIView):
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class CategoryDetailView(generics.RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
 
 
 class PlacesByCategoryView(APIView):

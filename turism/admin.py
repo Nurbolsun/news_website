@@ -51,16 +51,26 @@ class RegionAdmin(ModelAdmin):
 class CategoryAdmin(ModelAdmin):
     list_display = (
         'id',
-        'name',
-        'text',
-        'image_show',
+        'title',
+        'description',
+        'img_show',
+        'caption',
+        'page',
+        'title_2',
+        'page_2',
+        'title_3',
+        'page_3',
+        'title_4',
+        'page_4',
+        'title_5',
+        'page_5',
     )
 
-    def image_show(self, obj):
-        if obj.image:
-            return mark_safe("<img src='{}' width='60' />".format(obj.image.url))
+    def img_show(self, obj):
+        if obj.img:
+            return mark_safe("<img src='{}' width='60' />".format(obj.img.url))
         return 'None'
-    image_show.__name__ = 'Фотография'
+    img_show.__name__ = 'Фотография'
 
 
 class PlaceImageInline(admin.TabularInline):

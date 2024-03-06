@@ -93,9 +93,28 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = (
             'id',
-            'name',
-            'image',
-            'text'
+            'title',
+            'img',
+        )
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'id',
+            'title',
+            'description',
+            'img',
+            'caption',
+            'page',
+            'title_2',
+            'page_2',
+            'title_3',
+            'page_3',
+            'title_4',
+            'page_4',
+            'title_5',
+            'page_5',
         )
 
 

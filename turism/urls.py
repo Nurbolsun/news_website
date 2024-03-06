@@ -3,7 +3,8 @@ from django.urls import path, include
 from .views import (
     HomePageView, RegionNameListView,
     RegionListView, RegionDetailView,
-    CategoryListView, PlacesByCategoryView,
+    CategoryListView, CategoryDetailView,
+    PlacesByCategoryView,
     PlacesByRegionView, PlacesByMonthView,
     PLacesByTravellerView, PlaceListView,
     PlaceDetailView, MonthListView,
@@ -19,6 +20,7 @@ urlpatterns = [
     path('regions/', RegionListView.as_view(), name='regions'),
     path('regions/<int:pk>/', RegionDetailView.as_view(), name='regions-detail'),
     path('categories/', CategoryListView.as_view(), name='categories-list'),
+    path('categories/<int:pk>/', CategoryDetailView.as_view(), name='categories-detail'),
     path('places/by_category/<int:category_id>/', PlacesByCategoryView.as_view(), name='places-by-category'),
     path('places/by_region/<int:region_id>/', PlacesByRegionView.as_view(), name='places-by-region'),
     path('places/by_month/<int:month_id>/', PlacesByMonthView.as_view(), name='places-by-month'),
