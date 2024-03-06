@@ -95,6 +95,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'id',
             'title',
             'img',
+            'description',
         )
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
