@@ -71,6 +71,7 @@ class User(AbstractUser):
     )
     otp_reset = models.CharField(max_length=6, blank=True, null=True)
     otp_reset_created_at = models.DateTimeField(blank=True, null=True)
+    otp_verified = models.BooleanField(default=False)
 
     def otp_expired(self):
         if self.otp_reset_created_at:

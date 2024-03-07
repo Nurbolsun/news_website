@@ -89,6 +89,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 
 class OTPVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
     otp_reset = serializers.CharField()
 
 

@@ -225,15 +225,19 @@ class OTPVerificationView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = OTPVerificationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        otp = serializer.validated_data['otp_reset']
+        email = serializer.validated_data['email']
+        otp_reset = serializer.validated_data['otp_reset']
 
         try:
-            user = User.objects.get(otp_reset=otp)
+            user = User.objects.get(email=email, otp_reset=otp_reset)
         except User.DoesNotExist:
             return Response({'error': 'Недействительный код подтверждения'}, status=status.HTTP_400_BAD_REQUEST)
 
         if user.otp_expired():
             return Response({'error': 'Срок действия кода подтверждения истек'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.otp_verified = True
+        user.save()
 
         return Response({'message': 'Код подтверждения успешно подтвержден'}, status=status.HTTP_200_OK)
 
@@ -258,16 +262,17 @@ class CreateNewPasswordView(APIView):
         email = self.request.query_params.get('email')
 
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email, otp_verified=True)
         except User.DoesNotExist:
-            return Response({'error': 'Недействительный email'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Недействительный email или код подтверждения не прошел верификацию'}, status=status.HTTP_400_BAD_REQUEST)
 
         if user.otp_expired():
-            return Response({'error': 'Срок действия код подтверждения истек'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Срок действия кода подтверждения истек'}, status=status.HTTP_400_BAD_REQUEST)
 
         user.set_password(password)
         user.otp_reset = None
         user.otp_reset_created_at = None
+        user.otp_verified = False
         user.save()
 
         return Response({'message': 'Пароль установлен успешно'}, status=status.HTTP_200_OK)
