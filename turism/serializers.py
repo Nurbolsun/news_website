@@ -1,3 +1,4 @@
+import pytz
 from rest_framework import serializers
 
 from .models import (
@@ -163,7 +164,7 @@ class CommentarySerializer(serializers.ModelSerializer):
 
 class FeedbackSerializer(serializers.ModelSerializer):
     user_name = serializers.SerializerMethodField()
-
+    created_at = serializers.SerializerMethodField()
     class Meta:
         model = Feedback
         fields = (
@@ -176,3 +177,7 @@ class FeedbackSerializer(serializers.ModelSerializer):
     def get_user_name(self, obj):
         return obj.user.username if obj.user else "Anonymous"
 
+    def get_created_at(self, obj):
+        bishkek_timezone = pytz.timezone('Asia/Bishkek')
+        created_at_bishkek = obj.created_at.astimezone(bishkek_timezone)
+        return created_at_bishkek.strftime("%d-%m-%Y-%H:%M")
