@@ -1,7 +1,27 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Subscriber, Newsletter
 
+
+class SubscriberSerializer(serializers.Serializer):
+    class Meta:
+        model = Subscriber
+        fields = (
+            'id',
+            'email',
+            'subscribed',
+        )
+
+
+class NewsletterSerializer(serializers.Serializer):
+    class Meta:
+        model = Newsletter
+        fields = (
+            'id',
+            'subject',
+            'content',
+            'sent_at',
+        )
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)

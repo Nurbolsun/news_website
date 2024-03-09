@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.admin import ModelAdmin
 
-from .models import User
+from .models import User, Subscriber, Newsletter
 
 
 @admin.register(User)
@@ -21,4 +22,21 @@ class UserAdmin(UserAdmin):
             'is_active',
             'is_staff',
         )}),
+    )
+
+
+@admin.register(Subscriber)
+class SubscriberAdmin(ModelAdmin):
+    list_display = (
+        'email',
+        'subscribed',
+    )
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(ModelAdmin):
+    list_display = (
+        'subject',
+        'content',
+        'sent_at',
     )

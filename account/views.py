@@ -3,20 +3,21 @@ from django.http import Http404
 from django.contrib.auth import update_session_auth_hash
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics, status, permissions
+from rest_framework import generics, status, permissions, viewsets
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .models import User
+from .models import User, Subscriber, Newsletter
 from .utils import generate_otp
 from .serializers import (
     RegistrationSerializer, LoginSerializer,
     UserProfileSerializer, PasswordResetRequestSerializer,
     OTPVerificationSerializer, CreateNewPasswordSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer, SubscriberSerializer, NewsletterSerializer
 )
 
 
@@ -276,3 +277,34 @@ class CreateNewPasswordView(APIView):
         user.save()
 
         return Response({'message': 'Пароль установлен успешно'}, status=status.HTTP_200_OK)
+
+
+class SubscriberViewSet(viewsets.ModelViewSet):
+    queryset = Subscriber.objects.all()
+    serializer_class = SubscriberSerializer
+
+    def create(self, request, *args, **kwargs):
+        email = request.data.get('email', None)
+        if email:
+            subscriber, created = Subscriber.objects.get_or_create(email=email)
+            subscriber.subscribed = True
+            subscriber.save()
+            return Response({'status': 'success'})
+        else:
+            return Response({'status': 'error', 'message': 'Email is required for subscription'})
+
+
+class NewsletterViewSet(viewsets.ModelViewSet):
+    queryset = Newsletter.objects.all()
+    serializer_class = NewsletterSerializer
+
+    @action(detail=True, methods=['post'])
+    def send_newsletter(self, request, pk=None):
+        newsletter = self.get_object()
+        subscribers = Subscriber.objects.filter(subscribed=True)
+
+        for subscriber in subscribers:
+            subscriber.newsletters.add(newsletter)
+            # Здесь вы можете добавить логику отправки рассылки по электронной почте
+
+        return Response({'status': 'success'})

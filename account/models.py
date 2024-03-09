@@ -98,3 +98,39 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed = models.BooleanField(default=True)
+    newsletters = models.ManyToManyField(
+        'Newsletter', blank=True,
+        verbose_name='Полученные рассылки'
+    )
+
+    def __str__(self):
+        return self.email
+    class Meta:
+        verbose_name='Подписанные на рассылку'
+        verbose_name_plural='Подписанные на рассылку'
+
+
+class Newsletter(models.Model):
+    subject = models.CharField(
+        max_length=255,
+        verbose_name='Тема рассылки'
+    )
+    content = models.TextField(
+        verbose_name='Содержание рассылки'
+    )
+    sent_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Отправлено'
+    )
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = 'Рассылка'
+        verbose_name_plural = 'Рассылки'
