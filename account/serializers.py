@@ -3,14 +3,13 @@ from rest_framework import serializers
 from .models import User, Subscriber, Newsletter
 
 
-class SubscriberSerializer(serializers.Serializer):
-    class Meta:
-        model = Subscriber
-        fields = (
-            'id',
-            'email',
-            'subscribed',
-        )
+class SubscriptionSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=100)
+
+
+class UnsubscribeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
 
 
 class NewsletterSerializer(serializers.Serializer):

@@ -8,17 +8,18 @@ from .models import (
     Place, Category,
     Month, Traveller,
     Video, Commentary,
-    Feedback
+    Feedback, ConsultationRequest
 )
 from .serializers import (
     HomePageSerializer, RegionSerializer,
     RegionNameSerializer, RegionSerializer,
-    RegionDetailSerializer,
+    RegionDetailSerializer, TravellerDetailSerializer,
     CategoryDetailSerializer, CategorySerializer,
     PlaceSerializer, PlaceIncompleteSerializer,
     MonthSerializer, TravellerSerializer,
     VideoSerializer, PlaceIncompleteWithRegionSerializer,
     CommentarySerializer, FeedbackSerializer,
+    ConsultationRequestSerializer
 )
 
 
@@ -124,6 +125,11 @@ class TravellerListView(generics.ListAPIView):
     serializer_class = TravellerSerializer
 
 
+class TravellerDetailView(generics.RetrieveAPIView):
+    queryset = Traveller.objects.all()
+    serializer_class = TravellerDetailSerializer
+
+
 class PlaceListView(generics.ListAPIView):
     queryset = Place.objects.all()
     serializer_class = PlaceIncompleteWithRegionSerializer
@@ -142,6 +148,15 @@ class CommentaryListView(generics.ListAPIView):
 class FeedbackListCreateView(generics.ListCreateAPIView):
     queryset = Feedback.objects.all()
     serializer_class = FeedbackSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class ConsultationRequestView(generics.CreateAPIView):
+    queryset = ConsultationRequest.objects.all()
+    serializer_class = ConsultationRequestSerializer
+    # permission_classes = (IsAuthenticated, )
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

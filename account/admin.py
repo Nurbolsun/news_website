@@ -29,7 +29,9 @@ class UserAdmin(UserAdmin):
 class SubscriberAdmin(ModelAdmin):
     list_display = (
         'email',
+        'username',
         'subscribed',
+        'unsubscribed',
     )
 
 

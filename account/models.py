@@ -102,14 +102,19 @@ class User(AbstractUser):
 
 class Subscriber(models.Model):
     email = models.EmailField(unique=True)
+    username = models.CharField(
+        max_length=100,
+        verbose_name='Имя пользователя'
+    )
     subscribed = models.BooleanField(default=True)
+    unsubscribed = models.BooleanField(default=False)
     newsletters = models.ManyToManyField(
         'Newsletter', blank=True,
         verbose_name='Полученные рассылки'
     )
 
     def __str__(self):
-        return self.email
+        return f"{self.username} ({self.email})"
     class Meta:
         verbose_name='Подписанные на рассылку'
         verbose_name_plural='Подписанные на рассылку'

@@ -12,12 +12,16 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .models import User, Subscriber, Newsletter
-from .utils import generate_otp
+from .utils import (
+    generate_otp, subscribe_to_newsletter,
+    send_newsletter_to_subscribers, unsubscribe_from_newsletter
+)
 from .serializers import (
     RegistrationSerializer, LoginSerializer,
     UserProfileSerializer, PasswordResetRequestSerializer,
     OTPVerificationSerializer, CreateNewPasswordSerializer,
-    ChangePasswordSerializer, SubscriberSerializer, NewsletterSerializer
+    ChangePasswordSerializer, NewsletterSerializer,
+    SubscriptionSerializer, UnsubscribeSerializer
 )
 
 
@@ -279,32 +283,27 @@ class CreateNewPasswordView(APIView):
         return Response({'message': 'Пароль установлен успешно'}, status=status.HTTP_200_OK)
 
 
-class SubscriberViewSet(viewsets.ModelViewSet):
-    queryset = Subscriber.objects.all()
-    serializer_class = SubscriberSerializer
+class SubscribeToNewsletterView(generics.CreateAPIView):
+    serializer_class = SubscriptionSerializer
 
     def create(self, request, *args, **kwargs):
-        email = request.data.get('email', None)
-        if email:
-            subscriber, created = Subscriber.objects.get_or_create(email=email)
-            subscriber.subscribed = True
-            subscriber.save()
-            return Response({'status': 'success'})
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        username = serializer.validated_data['username']
+        subscribe_to_newsletter(email, username)
+        return Response({'status': 'Вы подписались на нашу рассылку!'}, status=status.HTTP_201_CREATED)
+
+
+class UnsubscribeFromNewsletterView(generics.CreateAPIView):
+    serializer_class = UnsubscribeSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        success = unsubscribe_from_newsletter(email)
+        if success:
+            return Response({'status': f'Вы успешно отписались от рассылки'}, status=status.HTTP_200_OK)
         else:
-            return Response({'status': 'error', 'message': 'Email is required for subscription'})
-
-
-class NewsletterViewSet(viewsets.ModelViewSet):
-    queryset = Newsletter.objects.all()
-    serializer_class = NewsletterSerializer
-
-    @action(detail=True, methods=['post'])
-    def send_newsletter(self, request, pk=None):
-        newsletter = self.get_object()
-        subscribers = Subscriber.objects.filter(subscribed=True)
-
-        for subscriber in subscribers:
-            subscriber.newsletters.add(newsletter)
-            # Здесь вы можете добавить логику отправки рассылки по электронной почте
-
-        return Response({'status': 'success'})
+            return Response({'status': 'Не удалось найти пользователя для отписки.'}, status=status.HTTP_404_NOT_FOUND)

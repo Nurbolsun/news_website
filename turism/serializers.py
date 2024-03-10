@@ -6,7 +6,8 @@ from .models import (
     Place, Category,
     PlaceImage, Month,
     Traveller, Video,
-    Commentary, Feedback
+    Commentary, Feedback,
+    ConsultationRequest
 )
 
 
@@ -56,7 +57,12 @@ class RegionDetailSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'image',
+            'short_description',
             'description',
+            'img_1',
+            'img_2',
+            'img_3',
+            'description_1',
         )
 
 
@@ -77,6 +83,23 @@ class TravellerSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'image',
+        )
+
+
+class TravellerDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Traveller
+        fields = (
+            'id',
+            'name',
+            'image',
+            'img_2',
+            'title',
+            'description_1',
+            'description_2',
+            'img_3',
+            'img_4',
+            'img_5',
         )
 
 
@@ -181,3 +204,8 @@ class FeedbackSerializer(serializers.ModelSerializer):
         bishkek_timezone = pytz.timezone('Asia/Bishkek')
         created_at_bishkek = obj.created_at.astimezone(bishkek_timezone)
         return created_at_bishkek.strftime("%d-%m-%Y-%H:%M")
+
+class ConsultationRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultationRequest
+        fields = '__all__'

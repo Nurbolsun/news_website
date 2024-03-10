@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from solo.models import SingletonModel
+from account.models import User
 
 
 class HomePage(SingletonModel):
@@ -53,6 +54,21 @@ class Region(models.Model):
     )
     description = models.TextField(
         verbose_name='Описание',
+    )
+    img_1 = models.ImageField(
+        upload_to='images/turism/',
+        verbose_name='Фото 1'
+    )
+    img_2 = models.ImageField(
+        upload_to='images/turism/',
+        verbose_name='Фото 2'
+    )
+    img_3 = models.ImageField(
+        upload_to='images/turism/',
+        verbose_name='Фото 3'
+    )
+    description_1 = models.TextField(
+        verbose_name='Описание 1',
     )
 
     def __str__(self):
@@ -121,6 +137,38 @@ class Traveller(models.Model):
     )
     image = models.ImageField(
         verbose_name='Изображение',
+        upload_to='images/turism/',
+        blank=True, null=True
+    )
+    img_2 = models.ImageField(
+        verbose_name='Изображение 2',
+        upload_to='images/turism/',
+        blank=True, null=True
+    )
+    title = models.CharField(
+        verbose_name='Заголовок',
+        max_length=25, blank=True, null=True,
+    )
+    description_1 = models.TextField(
+        verbose_name='Описание 1',
+        blank=True, null=True
+    )
+    description_2 = models.TextField(
+        verbose_name='Описание 2',
+        blank=True, null=True
+    )
+    img_3 = models.ImageField(
+        verbose_name='Изображение 3',
+        upload_to='images/turism/',
+        blank=True, null=True
+    )
+    img_4 = models.ImageField(
+        verbose_name='Изображение 4',
+        upload_to='images/turism/',
+        blank=True, null=True
+    )
+    img_5 = models.ImageField(
+        verbose_name='Изображение 5',
         upload_to='images/turism/',
         blank=True, null=True
     )
@@ -250,3 +298,48 @@ class Commentary(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
+
+
+class ConsultationRequest(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        verbose_name = 'Пользователь'
+    )
+    destination = models.CharField(
+        max_length=255,
+        blank=True, null=True,
+        verbose_name='Куда бы вы хотели поехать?'
+    )
+    travel_month = models.CharField(
+        max_length=20,
+        blank=True, null=True,
+        verbose_name='Когда вы хотели бы поехать? (Месяц)'
+    )
+    travel_year = models.IntegerField(
+        blank=True, null=True,
+        verbose_name='Когда вы хотели бы поехать? (Год)'
+    )
+    duration = models.CharField(
+        max_length=50,
+        blank=True, null=True,
+        verbose_name= 'Надолго ли?'
+    )
+    num_travelers = models.IntegerField(
+        blank=True, null=True,
+        verbose_name='Сколько человек путешествует?'
+    )
+    budget_per_person = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True,
+        verbose_name='Сколько вы хотели бы потратить на одного человека?'
+    )
+    comments = models.TextField(
+        blank=True, null=True,
+        verbose_name='Еще какие-нибудь комментарии или пожелания?'
+    )
+
+    def __str__(self):
+        return f"Заявка на консультацию в {self.destination} от {self.user.username}"
+
+    class Meta:
+        verbose_name = 'Заявка на консультацию'
+        verbose_name_plural = 'Заявки на консультацию'

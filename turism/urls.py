@@ -4,12 +4,13 @@ from .views import (
     HomePageView, RegionNameListView,
     RegionListView, RegionDetailView,
     CategoryListView, CategoryDetailView,
-    PlacesByCategoryView,
+    PlacesByCategoryView, TravellerDetailView,
     PlacesByRegionView, PlacesByMonthView,
     PLacesByTravellerView, PlaceListView,
     PlaceDetailView, MonthListView,
     TravellerListView, VideoView,
-    CommentaryListView, FeedbackListCreateView
+    CommentaryListView, FeedbackListCreateView,
+    ConsultationRequestView
 )
 
 
@@ -29,6 +30,9 @@ urlpatterns = [
     path('places/<int:pk>/', PlaceDetailView.as_view(), name='places-detail'),
     path('months/', MonthListView.as_view(), name='months-list'),
     path('travellers/', TravellerListView.as_view(), name='travellers-list'),
+    path('travellers/<int:pk>/', TravellerDetailView.as_view(), name='travellers-detail'),
     path('commentary/', CommentaryListView.as_view(), name='commentary-list'),
     path('feedback/', FeedbackListCreateView.as_view(), name='feedback-list-create'),
+    path('consultation/', ConsultationRequestView.as_view(), name='consultation-request'),
+
 ]
