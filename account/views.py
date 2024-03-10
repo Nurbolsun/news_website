@@ -3,10 +3,9 @@ from django.http import Http404
 from django.contrib.auth import update_session_auth_hash
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics, status, permissions, viewsets
+from rest_framework import generics, status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi

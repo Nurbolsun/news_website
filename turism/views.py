@@ -1,5 +1,4 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, generics, status, permissions
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -12,7 +11,7 @@ from .models import (
 )
 from .serializers import (
     HomePageSerializer, RegionSerializer,
-    RegionNameSerializer, RegionSerializer,
+    RegionNameSerializer,
     RegionDetailSerializer, TravellerDetailSerializer,
     CategoryDetailSerializer, CategorySerializer,
     PlaceSerializer, PlaceIncompleteSerializer,
