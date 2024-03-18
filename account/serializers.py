@@ -1,7 +1,26 @@
 from rest_framework import serializers
 
-from .models import User
+from .models import User, Subscriber, Newsletter
 
+
+class SubscriptionSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    username = serializers.CharField(max_length=100)
+
+
+class UnsubscribeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class NewsletterSerializer(serializers.Serializer):
+    class Meta:
+        model = Newsletter
+        fields = (
+            'id',
+            'subject',
+            'content',
+            'sent_at',
+        )
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -89,6 +108,7 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 
 class OTPVerificationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
     otp_reset = serializers.CharField()
 
 

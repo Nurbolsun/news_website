@@ -1,5 +1,4 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, generics, status, permissions
+from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -7,15 +6,19 @@ from .models import (
     HomePage, Region,
     Place, Category,
     Month, Traveller,
-    Video, Commentary
+    Video, Commentary,
+    Feedback, ConsultationRequest
 )
 from .serializers import (
     HomePageSerializer, RegionSerializer,
-    RegionNameSerializer, RegionSerializer,
-    RegionDetailSerializer, CategorySerializer,
+    RegionNameSerializer,
+    RegionDetailSerializer, TravellerDetailSerializer,
+    CategoryDetailSerializer, CategorySerializer,
     PlaceSerializer, PlaceIncompleteSerializer,
     MonthSerializer, TravellerSerializer,
-    VideoSerializer, PlaceIncompleteWithRegionSerializer, CommentarySerializer
+    VideoSerializer, PlaceIncompleteWithRegionSerializer,
+    CommentarySerializer, FeedbackSerializer,
+    ConsultationRequestSerializer
 )
 
 
@@ -41,6 +44,11 @@ class VideoView(APIView):
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class CategoryDetailView(generics.RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategoryDetailSerializer
 
 
 class PlacesByCategoryView(APIView):
@@ -116,6 +124,11 @@ class TravellerListView(generics.ListAPIView):
     serializer_class = TravellerSerializer
 
 
+class TravellerDetailView(generics.RetrieveAPIView):
+    queryset = Traveller.objects.all()
+    serializer_class = TravellerDetailSerializer
+
+
 class PlaceListView(generics.ListAPIView):
     queryset = Place.objects.all()
     serializer_class = PlaceIncompleteWithRegionSerializer
@@ -129,3 +142,20 @@ class PlaceDetailView(generics.RetrieveAPIView):
 class CommentaryListView(generics.ListAPIView):
     queryset = Commentary.objects.all()
     serializer_class = CommentarySerializer
+
+
+class FeedbackListCreateView(generics.ListCreateAPIView):
+    queryset = Feedback.objects.all()
+    serializer_class = FeedbackSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class ConsultationRequestView(generics.CreateAPIView):
+    queryset = ConsultationRequest.objects.all()
+    serializer_class = ConsultationRequestSerializer
+    # permission_classes = (IsAuthenticated, )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

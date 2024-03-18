@@ -7,7 +7,9 @@ from turism.models import (
     HomePage, Region,
     Place, Category,
     PlaceImage, Month,
-    Traveller, Video, Commentary,
+    Traveller, Video,
+    Commentary, Feedback,
+    ConsultationRequest
 )
 
 
@@ -37,6 +39,10 @@ class RegionAdmin(ModelAdmin):
         'image_show',
         'short_description',
         'description',
+        'img_1',
+        'img_2',
+        'img_3',
+        'description_1',
     )
 
     def image_show(self, obj):
@@ -49,16 +55,18 @@ class RegionAdmin(ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(ModelAdmin):
     list_display = (
-        'id',
-        'name',
-        'image_show',
+        'title',
+        'description',
+        'img_show',
+        'caption',
+        'page',
     )
 
-    def image_show(self, obj):
-        if obj.image:
-            return mark_safe("<img src='{}' width='60' />".format(obj.image.url))
+    def img_show(self, obj):
+        if obj.img:
+            return mark_safe("<img src='{}' width='60' />".format(obj.img.url))
         return 'None'
-    image_show.__name__ = 'Фотография'
+    img_show.__name__ = 'Фотография'
 
 
 class PlaceImageInline(admin.TabularInline):
@@ -69,7 +77,6 @@ class PlaceImageInline(admin.TabularInline):
 @admin.register(PlaceImage)
 class PlaceImageAdmin(ModelAdmin):
     list_display = (
-        'id',
         'place',
         'image_show',
     )
@@ -84,7 +91,6 @@ class PlaceImageAdmin(ModelAdmin):
 @admin.register(Month)
 class MonthAdmin(ModelAdmin):
     list_display = (
-        'id',
         'name',
         'image_show',
     )
@@ -99,9 +105,15 @@ class MonthAdmin(ModelAdmin):
 @admin.register(Traveller)
 class TravellerAdmin(ModelAdmin):
     list_display = (
-        'id',
         'name',
         'image_show',
+        'img_2',
+        'title',
+        'description_1',
+        'description_2',
+        'img_3',
+        'img_4',
+        'img_5',
     )
 
     def image_show(self, obj):
@@ -117,7 +129,6 @@ class PlaceAdmin(ModelAdmin):
     inlines = [PlaceImageInline]
     list_display = (
         'name',
-        'id',
         'address',
         'phone_number',
         'image_show',
@@ -145,7 +156,6 @@ class PlaceAdmin(ModelAdmin):
 @admin.register(Commentary)
 class CommentaryAdmin(ModelAdmin):
     list_display = (
-        'id',
         'title',
         'image',
         'description',
@@ -157,3 +167,31 @@ class CommentaryAdmin(ModelAdmin):
             return mark_safe("<img src='{}' width='60' />".format(obj.image.url))
         return 'None'
     image.__name__ = 'Фотография'
+
+
+@admin.register(Feedback)
+class FeedbackAdmin(ModelAdmin):
+    list_display = (
+        'get_user_name',
+        'comment',
+        'created_at'
+    )
+
+    def get_user_name(self, obj):
+        return obj.user.username if obj.user else "Anonymous"
+
+    get_user_name.short_description = 'User'
+
+
+@admin.register(ConsultationRequest)
+class ConsultationRequestAdmin(ModelAdmin):
+    list_display = (
+        'user',
+        'destination',
+        'travel_month',
+        'travel_year',
+        'duration',
+        'num_travelers',
+        'budget_per_person',
+        'comments'
+    )

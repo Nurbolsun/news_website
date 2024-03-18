@@ -30,7 +30,6 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     username = models.CharField(
         max_length=25, unique=False,
-        blank=True, null=True,
         verbose_name='Имя пользователя',
     )
     email = models.EmailField(
@@ -72,6 +71,7 @@ class User(AbstractUser):
     )
     otp_reset = models.CharField(max_length=6, blank=True, null=True)
     otp_reset_created_at = models.DateTimeField(blank=True, null=True)
+    otp_verified = models.BooleanField(default=False)
 
     def otp_expired(self):
         if self.otp_reset_created_at:
@@ -98,3 +98,44 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+
+
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    username = models.CharField(
+        max_length=100,
+        verbose_name='Имя пользователя'
+    )
+    subscribed = models.BooleanField(default=True)
+    unsubscribed = models.BooleanField(default=False)
+    newsletters = models.ManyToManyField(
+        'Newsletter', blank=True,
+        verbose_name='Полученные рассылки'
+    )
+
+    def __str__(self):
+        return f"{self.username} ({self.email})"
+    class Meta:
+        verbose_name='Подписанные на рассылку'
+        verbose_name_plural='Подписанные на рассылку'
+
+
+class Newsletter(models.Model):
+    subject = models.CharField(
+        max_length=255,
+        verbose_name='Тема рассылки'
+    )
+    content = models.TextField(
+        verbose_name='Содержание рассылки'
+    )
+    sent_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Отправлено'
+    )
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = 'Рассылка'
+        verbose_name_plural = 'Рассылки'

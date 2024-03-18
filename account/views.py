@@ -11,12 +11,16 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .models import User
-from .utils import generate_otp
+from .utils import (
+    generate_otp, subscribe_to_newsletter,
+    unsubscribe_from_newsletter
+)
 from .serializers import (
     RegistrationSerializer, LoginSerializer,
     UserProfileSerializer, PasswordResetRequestSerializer,
     OTPVerificationSerializer, CreateNewPasswordSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer,
+    SubscriptionSerializer, UnsubscribeSerializer
 )
 
 
@@ -43,7 +47,7 @@ class RegistrationView(APIView):
             )
             return Response({
                 'status': 200,
-                'message': 'Регистрация успешна. Проверьте электронную почту для подтверждения.',
+                'message': f'Регистрация успешна, {user.username}. Проверьте электронную почту для подтверждения.',
             })
         except ValidationError as e:
             return Response({
@@ -225,15 +229,19 @@ class OTPVerificationView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = OTPVerificationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        otp = serializer.validated_data['otp_reset']
+        email = serializer.validated_data['email']
+        otp_reset = serializer.validated_data['otp_reset']
 
         try:
-            user = User.objects.get(otp_reset=otp)
+            user = User.objects.get(email=email, otp_reset=otp_reset)
         except User.DoesNotExist:
             return Response({'error': 'Недействительный код подтверждения'}, status=status.HTTP_400_BAD_REQUEST)
 
         if user.otp_expired():
             return Response({'error': 'Срок действия кода подтверждения истек'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.otp_verified = True
+        user.save()
 
         return Response({'message': 'Код подтверждения успешно подтвержден'}, status=status.HTTP_200_OK)
 
@@ -258,16 +266,43 @@ class CreateNewPasswordView(APIView):
         email = self.request.query_params.get('email')
 
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(email=email, otp_verified=True)
         except User.DoesNotExist:
-            return Response({'error': 'Недействительный email'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Недействительный email или код подтверждения не прошел верификацию'}, status=status.HTTP_400_BAD_REQUEST)
 
         if user.otp_expired():
-            return Response({'error': 'Срок действия код подтверждения истек'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Срок действия кода подтверждения истек'}, status=status.HTTP_400_BAD_REQUEST)
 
         user.set_password(password)
         user.otp_reset = None
         user.otp_reset_created_at = None
+        user.otp_verified = False
         user.save()
 
         return Response({'message': 'Пароль установлен успешно'}, status=status.HTTP_200_OK)
+
+
+class SubscribeToNewsletterView(generics.CreateAPIView):
+    serializer_class = SubscriptionSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        username = serializer.validated_data['username']
+        subscribe_to_newsletter(email, username)
+        return Response({'status': 'Вы подписались на нашу рассылку!'}, status=status.HTTP_201_CREATED)
+
+
+class UnsubscribeFromNewsletterView(generics.CreateAPIView):
+    serializer_class = UnsubscribeSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data['email']
+        success = unsubscribe_from_newsletter(email)
+        if success:
+            return Response({'status': f'Вы успешно отписались от рассылки'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'status': 'Не удалось найти пользователя для отписки.'}, status=status.HTTP_404_NOT_FOUND)
