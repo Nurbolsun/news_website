@@ -10,16 +10,16 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .models import User, Subscriber, Newsletter
+from .models import User
 from .utils import (
     generate_otp, subscribe_to_newsletter,
-    send_newsletter_to_subscribers, unsubscribe_from_newsletter
+    unsubscribe_from_newsletter
 )
 from .serializers import (
     RegistrationSerializer, LoginSerializer,
     UserProfileSerializer, PasswordResetRequestSerializer,
     OTPVerificationSerializer, CreateNewPasswordSerializer,
-    ChangePasswordSerializer, NewsletterSerializer,
+    ChangePasswordSerializer,
     SubscriptionSerializer, UnsubscribeSerializer
 )
 

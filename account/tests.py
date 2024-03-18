@@ -1,11 +1,8 @@
 from django.core import mail
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase, APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.test import APITestCase
 from django.test import override_settings
-from django.shortcuts import get_object_or_404
 
 from .models import User
 from .factories import UserFactory
@@ -24,12 +21,11 @@ class RegistrationAPITest(APITestCase):
             'password_confirmation': 'password123',
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['message'], f'Регистрация успешна, {user_data.username}. Проверьте электронную почту для подтверждения.')
-
+        self.assertEqual(response.data['message'],
+                         f'Регистрация успешна, {user_data.username}. Проверьте электронную почту для подтверждения.')
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'LifeKG')
         self.assertEqual(mail.outbox[0].to, [user_data.email])
-
 
     def test_register_with_invalid_conf_password(self):
         url = reverse('register')
@@ -42,8 +38,6 @@ class RegistrationAPITest(APITestCase):
         })
         # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('message')
-
 
     def test_register_exist_email(self):
         User.objects.create(email='user@gmail.com')
@@ -60,6 +54,7 @@ class RegistrationAPITest(APITestCase):
         self.assertIn('email', response.data)
 
 
+#
 class LoginAPITest(APITestCase):
     def test_login_with_valid_credentials(self):
         user = UserFactory.create()

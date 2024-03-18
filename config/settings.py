@@ -7,10 +7,8 @@ from django.core.mail.backends.locmem import EmailBackend as LocmemEmailBackend
 from django.core.mail.backends.smtp import EmailBackend as SmtpEmailBackend
 from django.conf import settings
 if 'test' in sys.argv:
-    # Если запускаются тесты, используем locmem backend
     settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 else:
-    # Иначе используем SMTP backend
     settings.EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^i$_yg0g!)z0dqza!t!v7^oktg64lcxe+o-j!+@+1+yl0-whas'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-TESTING = True
+# TESTING = True
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
