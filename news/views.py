@@ -12,11 +12,6 @@ class NewsAPIList(generics.ListCreateAPIView):
     serializer_class = NewsListSerializers
 
 
-class NewsAPIUpdate(generics.RetrieveUpdateAPIView):
-    queryset = News.objects.all()
-    serializer_class = NewsListSerializers
-
-
 class NewsAPIDestroy(generics.RetrieveDestroyAPIView):
     queryset = News.objects.all()
     serializer_class = NewsListSerializers
@@ -52,13 +47,6 @@ class MostViewerNews(APIView):
 class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagListSerializer
-
-
-class AllNewsAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        news = News.objects.all()
-        serializer = NewsListSerializers(news, many=True)
-        return Response(serializer.data)
 
 
 class SliderAPIViewSet(viewsets.ModelViewSet):
